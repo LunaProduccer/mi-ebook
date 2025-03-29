@@ -158,6 +158,10 @@
   <button class="music-btn" id="btnMusic">Dale Play mi amor</button>
   <!-- Audio de fondo (oculto por defecto) -->
   <audio id="bgMusic" src="CANCION.mp3" loop></audio>
+<audio controls>
+  <source src="CANCION.mp3" type="audio/mpeg">
+  Tu navegador no soporta el elemento de audio.
+</audio>
 
   <!-- Contenedor principal del libro -->
   <div id="bookContainer">
@@ -273,6 +277,14 @@
       if (currentPage >= totalPages) currentPage = totalPages - 1;
       updateBookPosition();
     }
+    document.getElementById("btnMusic").addEventListener("click", function() {
+        let music = document.getElementById("bgMusic");
+        if (music.paused) {
+            music.play();
+        } else {
+            music.pause();
+        }
+    });
 
     // Eventos para dispositivos táctiles (swipe)
     let touchStartX = 0;
