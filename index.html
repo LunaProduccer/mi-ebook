@@ -93,7 +93,7 @@
       border-radius: 0;
       box-shadow: none;
     }
-    /* Detalle decorativo en cada página */
+    /* Decoración en cada página */
     .page::after {
       content: '💖';
       position: absolute;
@@ -118,13 +118,13 @@
     .intro-page p {
       margin: 1em 0;
     }
-    /* Aumentamos el interlineado para los capítulos: Noche 1, 2, 3, 4 y Epílogo */
-    #page2 p, 
-    #page3 p, 
-    #page4 p, 
-    #page5 p, 
+    /* Aumentamos el interlineado para Noche 1, Noche 2, Noche 3, Noche 4 y Epílogo */
+    #page2 p,
+    #page3 p,
+    #page4 p,
+    #page5 p,
     #page6 p {
-      line-height: 1.8;
+      line-height: 2;
     }
     /* Estilo para títulos de capítulos */
     h2 {
@@ -313,7 +313,6 @@
           coverOverlay.classList.add('open');
           setTimeout(() => {
             coverOverlay.style.display = 'none';
-            // Actualiza para mostrar la página de introducción (page1)
             updateBookPosition();
           }, 1000);
         }).catch(error => {
@@ -361,7 +360,6 @@
         document.getElementById('mensajeFinal').style.opacity = 1;
       });
 
-      // Inicializa la posición del libro
       updateBookPosition();
     });
   </script>
