@@ -48,7 +48,7 @@
       font-size: 20px;
       margin-top: 10px;
     }
-    /* Botón en la cubierta */
+    /* Botón para reproducir música en la cubierta */
     .music-btn {
       margin-top: 20px;
       padding: 10px 15px;
@@ -93,7 +93,7 @@
       border-radius: 0;
       box-shadow: none;
     }
-    /* Detalle decorativo en cada página */
+    /* Decoración en cada página */
     .page::after {
       content: '💖';
       position: absolute;
@@ -102,7 +102,7 @@
       font-size: 30px;
       opacity: 0.4;
     }
-    /* Animación de entrada de página */
+    /* Animación de entrada para las páginas */
     .page.show {
       animation: fadeIn 0.8s;
     }
@@ -159,7 +159,7 @@
       font-size: 14px;
       color: #888;
     }
-    /* Oculta el segundo reproductor con controles */
+    /* Oculta el segundo reproductor */
     audio[controls] {
       display: none;
     }
@@ -305,6 +305,8 @@
           coverOverlay.classList.add('open');
           setTimeout(() => {
             coverOverlay.style.display = 'none';
+            // Forzamos la actualización para mostrar la página de introducción
+            updateBookPosition();
           }, 1000);
         }).catch(error => {
           console.error('Error al reproducir la música:', error);
@@ -315,7 +317,7 @@
       const book = document.getElementById('book');
       const pages = document.querySelectorAll('.page');
       const totalPages = pages.length;
-      let currentPage = 0; // Índice: 0 = Página 1 (introducción), 1 = Página 2, etc.
+      let currentPage = 0; // 0 corresponde a la página de introducción (id="page1")
 
       function updateBookPosition() {
         book.style.transform = `translateX(-${currentPage * 100}vw)`;
@@ -351,6 +353,7 @@
         document.getElementById('mensajeFinal').style.opacity = 1;
       });
 
+      // Inicializamos la posición del libro
       updateBookPosition();
     });
   </script>
