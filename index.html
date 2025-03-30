@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- Se deshabilita el zoom para que no se pueda hacer pinch/zoom -->
+  <!-- Deshabilita zoom para evitar pinch/zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Almas Gemelas - Ebook</title>
   <style>
@@ -13,7 +13,7 @@
       background: #fffaf0;
       overflow-x: hidden;
     }
-    /* Cubierta Overlay (lo que se ve al iniciar) */
+    /* Cubierta Overlay (se muestra al iniciar) */
     #coverOverlay {
       position: fixed;
       top: 0;
@@ -28,7 +28,7 @@
       z-index: 10000;
       transition: transform 1s ease, opacity 1s ease;
     }
-    /* Clase que activa la animación de apertura */
+    /* Cuando se abre la cubierta, se desliza hacia arriba y desaparece */
     #coverOverlay.open {
       transform: translateY(-100%);
       opacity: 0;
@@ -48,7 +48,7 @@
       font-size: 20px;
       margin-top: 10px;
     }
-    /* Botón para reproducir música en la cubierta */
+    /* Botón en la cubierta */
     .music-btn {
       margin-top: 20px;
       padding: 10px 15px;
@@ -63,7 +63,7 @@
     .music-btn:hover {
       background: #FF69B4;
     }
-    /* Contenedor del libro: ocupa toda la pantalla */
+    /* Contenedor principal del libro */
     #bookContainer {
       width: 100vw;
       height: 100vh;
@@ -80,7 +80,7 @@
       transition: transform 0.8s ease;
       transform-style: preserve-3d;
     }
-    /* Cada página ocupa el 100% del viewport en ancho y alto */
+    /* Cada página ocupa 100% del viewport */
     .page {
       flex: 0 0 100%;
       height: 100%;
@@ -93,7 +93,7 @@
       border-radius: 0;
       box-shadow: none;
     }
-    /* Decoración de cada página: corazón sutil en la esquina inferior izquierda */
+    /* Detalle decorativo en cada página */
     .page::after {
       content: '💖';
       position: absolute;
@@ -102,7 +102,7 @@
       font-size: 30px;
       opacity: 0.4;
     }
-    /* Animación de entrada para las páginas */
+    /* Animación de entrada de página */
     .page.show {
       animation: fadeIn 0.8s;
     }
@@ -110,7 +110,7 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Página 0: Mensaje introductorio */
+    /* Página 1: Introducción (mensaje de cumpleaños) */
     .intro-page {
       text-align: justify;
       line-height: 1.6;
@@ -118,29 +118,7 @@
     .intro-page p {
       margin: 1em 0;
     }
-    /* Página 1: Portada */
-    .cover-page {
-      background: linear-gradient(135deg, #FFB6C1, #FFE4E1);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-      height: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    .cover-page h1 {
-      font-size: 48px;
-      margin: 0;
-      letter-spacing: 2px;
-    }
-    .cover-page p {
-      font-size: 20px;
-      margin-top: 10px;
-    }
-    /* Estilo para el contenido (capítulos) */
+    /* Estilo para títulos de capítulos */
     h2 {
       margin-top: 0;
       color: #c1440e;
@@ -161,7 +139,6 @@
     .btn:hover {
       background: #FF69B4;
     }
-    /* Contenedor de la firma final */
     .signatureContainer {
       margin-top: 40px;
       text-align: center;
@@ -186,7 +163,7 @@
     audio[controls] {
       display: none;
     }
-    /* Estilos responsivos para dispositivos móviles */
+    /* Responsivo */
     @media only screen and (max-width: 600px) {
       #coverOverlay .cover h1 {
         font-size: 36px;
@@ -223,7 +200,7 @@
     <div class="cover">
       <h1>ALMAS GEMELAS</h1>
       <p>Un cuento de amor</p>
-      <!-- Botón para iniciar música y abrir la cubierta -->
+      <!-- Botón para iniciar la reproducción y abrir la cubierta -->
       <button class="music-btn" id="btnMusic">Dale Play mi amor</button>
     </div>
   </div>
@@ -231,8 +208,8 @@
   <!-- Contenedor principal del libro -->
   <div id="bookContainer">
     <div id="book">
-      <!-- Página 0: Mensaje introductorio -->
-      <div class="page intro-page" id="page0">
+      <!-- Página 1: Introducción (mensaje de cumpleaños) -->
+      <div class="page intro-page" id="page1">
         <p>
           Hoy el universo se detiene para celebrar que llegaste a iluminar este mundo hace 19 primaveras. ¿Dónde quedó aquella chispa tímida que conocí hace 4 lunas? En su lugar floreció esta mujer extraordinaria que hace latir mi corazón al compás de sus risas.
         </p>
@@ -249,18 +226,11 @@
         <div class="navHint">Desliza a la izquierda para continuar</div>
       </div>
 
-      <!-- Página 1: Portada -->
-      <div class="page cover-page" id="page1">
-        <h1>ALMAS GEMELAS</h1>
-        <p>Un cuento de amor</p>
-        <div class="navHint">Desliza a la izquierda para continuar</div>
-      </div>
-
       <!-- Página 2: Noche 1 -->
       <div class="page" id="page2">
         <h2>Noche 1: El Encuentro en el Jardín de Estrellas</h2>
         <p>
-          En un rincón olvidado por el tiempo, donde las luces del firmamento se entrelazan con el murmullo del viento, se reunían almas jóvenes en un jardín encantado. Allí, entre risas tímidas y saludos que parecían danzas silenciosas, dos espíritus se distinguían a la distancia. Ella, de mirada soñadora, había notado su reflejo en los ojos de aquel “segundo alma” con quien apenas compartían saludos cordiales. Sin saber lo que el destino tenía preparado, aquella noche se selló un pacto silencioso: ella le pidió que la acompañara hasta su morada, y él, con la cortesía de un caballero de antaño, aceptó. Durante el trayecto, entre anécdotas de la universidad y confidencias que brotaban como riachuelos, descubrieron una conexión sutil, un lazo de afinidad que prometía crecer con cada palabra compartida. Al llegar a su destino, un beso en la mejilla marcó el inicio de una leyenda que apenas comenzaba a escribirse.
+          En un rincón olvidado por el tiempo, donde las luces del firmamento se entrelazan con el murmullo del viento, se reunían almas jóvenes en un jardín encantado. Allí, entre risas tímidas y saludos que parecían danzas silenciosas, dos espíritus se distinguían a la distancia. Ella, de mirada soñadora, había notado su reflejo en los ojos de aquel “segundo alma” con quien apenas compartían saludos cordiales. Sin saber lo que el destino tenía preparado, aquella noche se selló un pacto silencioso: ella le pidió que la acompañara hasta su morada, y él, con la cortesía de un caballero de antaño, aceptó. Durante el trayecto, entre anécdotas y confidencias que brotaban como riachuelos, descubrieron una conexión sutil que prometía crecer con cada palabra compartida. Al llegar a su destino, un beso en la mejilla marcó el inicio de una leyenda que apenas comenzaba a escribirse.
         </p>
         <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
       </div>
@@ -269,7 +239,7 @@
       <div class="page" id="page3">
         <h2>Noche 2: Melodías en la Ciudad de los Susurros</h2>
         <p>
-          La segunda noche se presentó en un escenario transformado por la imaginación, alejado del bullicio habitual, en una ciudad donde cada calle parecía susurrar secretos de amores pasados y futuros. Viajaron en un auto que se convirtió en un carruaje moderno, en el que las calles se iluminaban como si celebraran su inminente aventura. En medio del viaje, la magia se hizo palpable cuando sus manos se encontraron de forma casi imperceptible, encendiendo una chispa que llenó el aire de promesas silenciosas. Llegaron a un lugar donde la noche se transformó en un carnaval de risas, karaoke y juegos, donde cada canción era un eco de sus corazones latiendo al unísono. Cuando el reloj marcó la hora de despedirse, la calidez de aquella noche se llevó consigo un suspiro y el firme deseo de volver a encontrarse.
+          La segunda noche se presentó en un escenario transformado por la imaginación, alejado del bullicio habitual, en una ciudad donde cada calle parecía susurrar secretos de amores pasados y futuros. Viajaron en un auto que se convirtió en un carruaje moderno, donde las calles se iluminaban como si celebraran su inminente aventura. En medio del viaje, la magia se hizo palpable cuando sus manos se encontraron de forma casi imperceptible, encendiendo una chispa que llenó el aire de promesas silenciosas. Llegaron a un lugar donde la noche se transformó en un carnaval de risas, karaoke y juegos, donde cada canción era un eco de sus corazones latiendo al unísono. Cuando el reloj marcó la hora de despedirse, la calidez de aquella noche se llevó consigo un suspiro y el deseo de volver a encontrarse.
         </p>
         <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
       </div>
@@ -278,7 +248,7 @@
       <div class="page" id="page4">
         <h2>Noche 3: Bajo el Manto del Firmamento</h2>
         <p>
-          La tercera noche llegó con la vibrante energía de un día lleno de desafíos y victorias. Él se preparaba para un partido de fútbol en un escenario casi mítico, donde el campo parecía estar bendecido por la misma divinidad de las estrellas. Ella, con el espíritu de una fiel compañera, decidió acompañarlo, convirtiéndose en el amuleto de buena suerte que él necesitaba. Tras la intensa jornada, mientras las luces de la ciudad se mezclaban con el cansancio del cuerpo, ella notó el peso del agotamiento en su espalda. Con la ternura de quien comprende el lenguaje del alma, se ofreció a aliviar su fatiga con masajes que parecían pinceladas de calma en medio del caos. Sentados en un parque iluminado solo por el brillo de las estrellas, se entregaron a un silencio cómplice, donde las palabras sobraban y el universo entero parecía detenerse. Entre un susurro y una nota musical, él cantó, y en esa dulce melodía, ella encontró el reflejo de sus propios sueños. Allí, en ese instante mágico, sus miradas se unieron en una danza que desvelaba el destino de dos almas destinadas a encontrarse.
+          La tercera noche llegó con la vibrante energía de un día lleno de desafíos y victorias. Él se preparaba para un partido de fútbol en un escenario casi mítico, donde el campo parecía estar bendecido por la divinidad de las estrellas. Ella, con el espíritu de una fiel compañera, decidió acompañarlo, convirtiéndose en el amuleto de buena suerte que él necesitaba. Tras la intensa jornada, mientras las luces se mezclaban con el cansancio, ella notó el peso del agotamiento en su espalda. Con la ternura de quien comprende el lenguaje del alma, se ofreció a aliviar su fatiga con masajes que parecían pinceladas de calma en medio del caos. Sentados en un parque iluminado solo por el brillo de las estrellas, se entregaron a un silencio cómplice, donde las palabras sobraban y el universo parecía detenerse. Entre un susurro y una nota musical, él cantó, y en esa dulce melodía, ella encontró el reflejo de sus propios sueños.
         </p>
         <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
       </div>
@@ -287,7 +257,7 @@
       <div class="page" id="page5">
         <h2>Noche 4: El Beso del Destino en la Ciudad de los Secretos</h2>
         <p>
-          En una noche siguiente, el destino quiso poner a prueba su conexión en medio de un vibrante encuentro deportivo, donde se enfrentaban naciones y pasiones. La efervescencia del ambiente se vio empañada momentáneamente cuando él, en un descuido, saludó a un alma fría y llena de maldad, haciendo brotar un sentimiento de celos en ella. El ambiente se volvió tenso; el silencio se adueñó de los minutos, y la magia se detuvo en un instante de incertidumbre. Sin embargo, el verdadero valor de su vínculo se manifestó cuando, en plena calle, él la abrazó con la fuerza de quien busca sanar una herida invisible y le preguntó con el alma qué le pasaba. La respuesta fue un beso, tierno y ardiente, que rompió las barreras de la incomodidad y selló la reconciliación entre sus corazones. A pesar del murmullo tímido de la noche y de la vergüenza de haber desafiado el mundo en público, tomaron un taxi que los resguardó, donde se mostraron sin reservas, dejando que sus besos hablaran por ellos. Esa noche se convirtió en el capítulo en el que aprendieron que el amor verdadero puede superar cualquier obstáculo, incluso el temor a ser vistos.
+          En una noche siguiente, el destino quiso poner a prueba su conexión en medio de un vibrante encuentro deportivo, donde se enfrentaban naciones y pasiones. La efervescencia se vio empañada momentáneamente cuando él, en un descuido, saludó a un alma fría y llena de maldad, haciendo brotar celos en ella. El ambiente se volvió tenso; el silencio se adueñó de los minutos, y la magia se detuvo en un instante. Sin embargo, el verdadero valor de su vínculo se manifestó cuando, en plena calle, él la abrazó con la fuerza de quien busca sanar una herida invisible y le preguntó qué le pasaba. La respuesta fue un beso, tierno y ardiente, que rompió las barreras de la incomodidad y selló la reconciliación entre sus corazones.
         </p>
         <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
       </div>
@@ -296,7 +266,7 @@
       <div class="page" id="page6">
         <h2>Epílogo: El Crepúsculo de un Amor Eterno</h2>
         <p>
-          A lo largo de muchas noches llenas de encuentros, risas, confesiones y desafíos, las dos almas tejieron un lazo indestructible. Su amor creció en la complicidad de cada instante, en la magia de cada sonrisa y en la dulzura de cada beso furtivo. La leyenda de aquellos encuentros se convirtió en un susurro eterno, un recordatorio de que cuando dos almas están destinadas a encontrarse, el universo entero conspira para unirlas. Y así, en el crisol de la noche, donde la luz y la sombra se funden en un abrazo, quedó sellado el destino de un amor que desafió al tiempo y a la rutina, una historia que aún vive en cada latido del corazón.
+          A lo largo de muchas noches llenas de encuentros, risas, confesiones y desafíos, dos almas tejieron un lazo indestructible. Su amor creció en la complicidad de cada instante, en la magia de cada sonrisa y en la dulzura de cada beso furtivo. La leyenda de aquellos encuentros se convirtió en un susurro eterno, un recordatorio de que cuando dos almas están destinadas a encontrarse, el universo conspira para unirlas. Así, en el crisol de la noche, donde la luz y la sombra se funden en un abrazo, quedó sellado el destino de un amor que desafió al tiempo y a la rutina.
         </p>
         <div class="navHint">Desliza a la izquierda para continuar</div>
       </div>
@@ -316,7 +286,7 @@
 
   <!-- Audio de fondo (CANCION2.mp3) con playsinline -->
   <audio id="bgMusic" src="CANCION2.mp3" loop playsinline></audio>
-  <!-- Segundo audio con controles (oculto por CSS) -->
+  <!-- Segundo audio con controles (oculto) -->
   <audio controls>
     <source src="CANCION.mp3" type="audio/mpeg">
     Tu navegador no soporta el elemento de audio.
@@ -324,7 +294,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Reproducción de música y apertura de la cubierta:
+      // Reproducción y apertura de la cubierta:
       const bgMusic = document.getElementById('bgMusic');
       const btnMusic = document.getElementById('btnMusic');
       const coverOverlay = document.getElementById('coverOverlay');
@@ -332,9 +302,7 @@
       btnMusic.addEventListener('click', () => {
         bgMusic.play().then(() => {
           console.log('Música reproduciéndose...');
-          // Dispara la animación de apertura de la cubierta
           coverOverlay.classList.add('open');
-          // Remueve el overlay al terminar la animación (1s)
           setTimeout(() => {
             coverOverlay.style.display = 'none';
           }, 1000);
@@ -343,19 +311,17 @@
         });
       });
 
-      // Variables para control de páginas
+      // Control de páginas:
       const book = document.getElementById('book');
       const pages = document.querySelectorAll('.page');
       const totalPages = pages.length;
-      let currentPage = 0; // índice de 0 a totalPages-1
+      let currentPage = 0; // Índice: 0 = Página 1 (introducción), 1 = Página 2, etc.
 
-      // Actualiza la posición del contenedor "book"
       function updateBookPosition() {
         book.style.transform = `translateX(-${currentPage * 100}vw)`;
         pages[currentPage].classList.add('show');
       }
 
-      // Función para cambiar página
       function changePage(delta) {
         pages[currentPage].classList.remove('show');
         currentPage += delta;
@@ -364,39 +330,27 @@
         updateBookPosition();
       }
 
-      // Eventos para dispositivos táctiles (swipe)
       let touchStartX = 0;
       book.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
       });
       book.addEventListener('touchend', e => {
-        let touchEndX = e.changedTouches[0].clientX;
-        let deltaX = touchStartX - touchEndX;
+        const touchEndX = e.changedTouches[0].clientX;
+        const deltaX = touchStartX - touchEndX;
         if (Math.abs(deltaX) > 50) {
-          if (deltaX > 0) {
-            changePage(1);
-          } else {
-            changePage(-1);
-          }
+          deltaX > 0 ? changePage(1) : changePage(-1);
         }
       });
 
-      // Eventos para mouse (en PC) - opcional para cambiar de página
       document.addEventListener('mousemove', e => {
-        if (e.clientX < 50) {
-          changePage(-1);
-        } else if (e.clientX > window.innerWidth - 50) {
-          changePage(1);
-        }
+        if (e.clientX < 50) changePage(-1);
+        else if (e.clientX > window.innerWidth - 50) changePage(1);
       });
 
-      // Botón de firmar: al hacer click, muestra la animación del mensaje final
       document.getElementById('btnFirmar').addEventListener('click', () => {
-        const mensajeFinal = document.getElementById('mensajeFinal');
-        mensajeFinal.style.opacity = 1;
+        document.getElementById('mensajeFinal').style.opacity = 1;
       });
 
-      // Inicializamos la posición del libro
       updateBookPosition();
     });
   </script>
