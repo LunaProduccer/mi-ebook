@@ -1,367 +1,413 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <!-- Deshabilita zoom para evitar pinch/zoom -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Almas Gemelas - Ebook</title>
-  <style>
-    /* Estilo general */
-    body {
-      margin: 0;
-      font-family: "Times New Roman", Times, serif;
-      background: #fffaf0;
-      overflow-x: hidden;
-    }
-    /* Cubierta Overlay (se muestra al iniciar) */
-    #coverOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, #FFB6C1, #FFE4E1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      transition: transform 1s ease, opacity 1s ease;
-    }
-    /* Cuando se abre la cubierta, se desliza hacia arriba y desaparece */
-    #coverOverlay.open {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    /* Contenido de la cubierta */
-    #coverOverlay .cover {
-      text-align: center;
-      color: #fff;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    #coverOverlay .cover h1 {
-      font-size: 48px;
-      margin: 0;
-      letter-spacing: 2px;
-    }
-    #coverOverlay .cover p {
-      font-size: 20px;
-      margin-top: 10px;
-    }
-    /* Botón para reproducir música en la cubierta */
-    .music-btn {
-      margin-top: 20px;
-      padding: 10px 15px;
-      background: #FFB6C1;
-      color: #fff;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .music-btn:hover {
-      background: #FF69B4;
-    }
-    /* Contenedor principal del libro */
-    #bookContainer {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      perspective: 1500px;
-      background: #fffaf0;
-      overflow-x: hidden;
-    }
-    /* Contenedor de páginas */
-    #book {
-      display: flex;
-      height: 100%;
-      width: 100%;
-      transition: transform 0.8s ease;
-      transform-style: preserve-3d;
-    }
-    /* Cada página ocupa 100% del viewport */
-    .page {
-      flex: 0 0 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 5vh 5vw;
-      overflow-y: auto;
-      background: white;
-      position: relative;
-      margin: 0;
-      border-radius: 0;
-      box-shadow: none;
-    }
-    /* Decoración en cada página */
-    .page::after {
-      content: '💖';
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      font-size: 30px;
-      opacity: 0.4;
-    }
-    /* Animación de entrada de página */
-    .page.show {
-      animation: fadeIn 0.8s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    /* Página 1: Introducción (mensaje de cumpleaños) */
-    .intro-page {
-      text-align: justify;
-      line-height: 1.6;
-    }
-    .intro-page p {
-      margin: 1em 0;
-    }
-    /* Aumentamos el interlineado para Noche 1, Noche 2, Noche 3, Noche 4 y Epílogo */
-    #page2 p,
-    #page3 p,
-    #page4 p,
-    #page5 p,
-    #page6 p {
-      line-height: 2;
-    }
-    /* Estilo para títulos de capítulos */
-    h2 {
-      margin-top: 0;
-      color: #c1440e;
-    }
-    /* Botón de firma */
-    .btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 25px;
-      font-size: 20px;
-      background: #FFB6C1;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .btn:hover {
-      background: #FF69B4;
-    }
-    .signatureContainer {
-      margin-top: 40px;
-      text-align: center;
-    }
-    .signatureContainer .mensajeFinal {
-      font-size: 24px;
-      font-weight: bold;
-      color: #c1440e;
-      opacity: 0;
-      transition: opacity 2s;
-    }
-    /* Indicador de navegación */
-    .navHint {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      text-align: center;
-      font-size: 14px;
-      color: #888;
-    }
-    /* Oculta el segundo reproductor */
-    audio[controls] {
-      display: none;
-    }
-    /* Responsivo */
-    @media only screen and (max-width: 600px) {
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Deshabilita zoom para evitar pinch/zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Almas Gemelas - Ebook</title>
+    <style>
+      /* Estilo general */
+      body {
+        margin: 0;
+        font-family: "Times New Roman", Times, serif;
+        background: #fffaf0;
+        overflow-x: hidden;
+      }
+
+      /* Cubierta Overlay (se muestra al iniciar) */
+      #coverOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, #FFB6C1, #FFE4E1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        transition: transform 1s ease, opacity 1s ease;
+      }
+
+      /* Cuando se abre la cubierta, se desliza hacia arriba y desaparece */
+      #coverOverlay.open {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+
+      /* Contenido de la cubierta */
+      #coverOverlay .cover {
+        text-align: center;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
       #coverOverlay .cover h1 {
-        font-size: 36px;
+        font-size: 48px;
+        margin: 0;
+        letter-spacing: 2px;
       }
+
       #coverOverlay .cover p {
-        font-size: 16px;
-      }
-      .music-btn {
-        font-size: 14px;
-        padding: 8px 12px;
-      }
-      h2 {
-        font-size: 22px;
-      }
-      p {
-        font-size: 16px;
-      }
-      .btn {
-        font-size: 18px;
-        padding: 8px 20px;
-      }
-      .signatureContainer .mensajeFinal {
         font-size: 20px;
-      }
-      .navHint {
-        font-size: 12px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Cubierta Overlay -->
-  <div id="coverOverlay">
-    <div class="cover">
-      <h1>ALMAS GEMELAS</h1>
-      <p>Un cuento de amor</p>
-      <!-- Botón para iniciar la reproducción y abrir la cubierta -->
-      <button class="music-btn" id="btnMusic">Dale Play mi amor</button>
-    </div>
-  </div>
-
-  <!-- Contenedor principal del libro -->
-  <div id="bookContainer">
-    <div id="book">
-      <!-- Página 1: Introducción (mensaje de cumpleaños) -->
-      <div class="page intro-page" id="page1">
-        <p>
-          Hoy el universo se detiene para celebrar que llegaste a iluminar este mundo hace 19 primaveras. ¿Dónde quedó aquella chispa tímida que conocí hace 4 lunas? En su lugar floreció esta mujer extraordinaria que hace latir mi corazón al compás de sus risas.
-        </p>
-        <p>
-          Que nuestro Padre Celestial te cubra con su manto de bendiciones, porque eres pura luz hecha mujer: esa combinación perfecta de ternura guerrera, inteligencia que deslumbra y una belleza que nace del alma.
-        </p>
-        <p>
-          Te preparé un pequeño tesoro digital donde plasmé nuestros primeros capítulos (¡saqué al poeta cursi que llevo dentro! 📖💘). Si logro hacer sonreír a mi musa inspiradora, firma tu nombre en la última página y quedaremos unidos como tinta y papel. Si no... ¡prometo tomar clases de escritura romántica! XD
-        </p>
-        <p>
-          Feliz cumpleaños, mi razón para creer en los milagros.<br>
-          <strong>Eternamente tu cómplice de sueños, tu chico Alonso 🌙💫</strong>
-        </p>
-        <div class="navHint">Desliza a la izquierda para continuar</div>
-      </div>
-
-      <!-- Página 2: Noche 1 -->
-      <div class="page" id="page2">
-        <h2>Noche 1: El Encuentro en el Jardín de Estrellas</h2>
-        <p>
-          En un rincón olvidado por el tiempo, donde las luces del firmamento se entrelazan con el murmullo del viento, se reunían almas jóvenes en un jardín encantado. Allí, entre risas tímidas y saludos que parecían danzas silenciosas, dos espíritus se distinguían a la distancia. Ella, de mirada soñadora, había notado su reflejo en los ojos de aquel “segundo alma” con quien apenas compartían saludos cordiales. Sin saber lo que el destino tenía preparado, aquella noche se selló un pacto silencioso: ella le pidió que la acompañara hasta su morada, y él, con la cortesía de un caballero de antaño, aceptó. Durante el trayecto, entre anécdotas y confidencias que brotaban como riachuelos, descubrieron una conexión sutil que prometía crecer con cada palabra compartida. Al llegar a su destino, un beso en la mejilla marcó el inicio de una leyenda que apenas comenzaba a escribirse.
-        </p>
-        <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
-      </div>
-
-      <!-- Página 3: Noche 2 -->
-      <div class="page" id="page3">
-        <h2>Noche 2: Melodías en la Ciudad de los Susurros</h2>
-        <p>
-          La segunda noche se presentó en un escenario transformado por la imaginación, alejado del bullicio habitual, en una ciudad donde cada calle parecía susurrar secretos de amores pasados y futuros. Viajaron en un auto que se convirtió en un carruaje moderno, donde las calles se iluminaban como si celebraran su inminente aventura. En medio del viaje, la magia se hizo palpable cuando sus manos se encontraron de forma casi imperceptible, encendiendo una chispa que llenó el aire de promesas silenciosas. Llegaron a un lugar donde la noche se transformó en un carnaval de risas, karaoke y juegos, donde cada canción era un eco de sus corazones latiendo al unísono. Cuando el reloj marcó la hora de despedirse, la calidez de aquella noche se llevó consigo un suspiro y el deseo de volver a encontrarse.
-        </p>
-        <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
-      </div>
-
-      <!-- Página 4: Noche 3 -->
-      <div class="page" id="page4">
-        <h2>Noche 3: Bajo el Manto del Firmamento</h2>
-        <p>
-          La tercera noche llegó con la vibrante energía de un día lleno de desafíos y victorias. Él se preparaba para un partido de fútbol en un escenario casi mítico, donde el campo parecía estar bendecido por la divinidad de las estrellas. Ella, con el espíritu de una fiel compañera, decidió acompañarlo, convirtiéndose en el amuleto de buena suerte que él necesitaba. Tras la intensa jornada, mientras las luces se mezclaban con el cansancio, ella notó el peso del agotamiento en su espalda. Con la ternura de quien comprende el lenguaje del alma, se ofreció a aliviar su fatiga con masajes que parecían pinceladas de calma en medio del caos. Sentados en un parque iluminado solo por el brillo de las estrellas, se entregaron a un silencio cómplice, donde las palabras sobraban y el universo parecía detenerse. Entre un susurro y una nota musical, él cantó, y en esa dulce melodía, ella encontró el reflejo de sus propios sueños.
-        </p>
-        <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
-      </div>
-
-      <!-- Página 5: Noche 4 -->
-      <div class="page" id="page5">
-        <h2>Noche 4: El Beso del Destino en la Ciudad de los Secretos</h2>
-        <p>
-          En una noche siguiente, el destino quiso poner a prueba su conexión en medio de un vibrante encuentro deportivo, donde se enfrentaban naciones y pasiones. La efervescencia se vio empañada momentáneamente cuando él, en un descuido, saludó a un alma fría y llena de maldad, haciendo brotar celos en ella. El ambiente se volvió tenso; el silencio se adueñó de los minutos, y la magia se detuvo en un instante. Sin embargo, el verdadero valor de su vínculo se manifestó cuando, en plena calle, él la abrazó con la fuerza de quien busca sanar una herida invisible y le preguntó qué le pasaba. La respuesta fue un beso, tierno y ardiente, que rompió las barreras de la incomodidad y selló la reconciliación entre sus corazones.
-        </p>
-        <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
-      </div>
-
-      <!-- Página 6: Epílogo -->
-      <div class="page" id="page6">
-        <h2>Epílogo: El Crepúsculo de un Amor Eterno</h2>
-        <p>
-          A lo largo de muchas noches llenas de encuentros, risas, confesiones y desafíos, dos almas tejieron un lazo indestructible. Su amor creció en la complicidad de cada instante, en la magia de cada sonrisa y en la dulzura de cada beso furtivo. La leyenda de aquellos encuentros se convirtió en un susurro eterno, un recordatorio de que cuando dos almas están destinadas a encontrarse, el universo conspira para unirlas. Así, en el crisol de la noche, donde la luz y la sombra se funden en un abrazo, quedó sellado el destino de un amor que desafió al tiempo y a la rutina.
-        </p>
-        <div class="navHint">Desliza a la izquierda para continuar</div>
-      </div>
-
-      <!-- Página 7: Firma final -->
-      <div class="page" id="page7">
-        <h2>Firma</h2>
-        <p>Si te gustó este tesoro digital, firma y quedaremos unidos como tinta y papel.</p>
-        <button class="btn" id="btnFirmar">Firmar</button>
-        <div class="signatureContainer">
-          <p class="mensajeFinal" id="mensajeFinal">Juntos por siempre Malu y Alonso ❤️</p>
-        </div>
-        <div class="navHint">Desliza a la derecha para volver</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Audio de fondo (CANCION2.mp3) con playsinline -->
-  <audio id="bgMusic" src="CANCION2.mp3" loop playsinline></audio>
-  <!-- Segundo audio con controles (oculto) -->
-  <audio controls>
-    <source src="CANCION.mp3" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-  </audio>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Reproducción y apertura de la cubierta:
-      const bgMusic = document.getElementById('bgMusic');
-      const btnMusic = document.getElementById('btnMusic');
-      const coverOverlay = document.getElementById('coverOverlay');
-
-      btnMusic.addEventListener('click', () => {
-        bgMusic.play().then(() => {
-          console.log('Música reproduciéndose...');
-          coverOverlay.classList.add('open');
-          setTimeout(() => {
-            coverOverlay.style.display = 'none';
-            updateBookPosition();
-          }, 1000);
-        }).catch(error => {
-          console.error('Error al reproducir la música:', error);
-        });
-      });
-
-      // Control de páginas:
-      const book = document.getElementById('book');
-      const pages = document.querySelectorAll('.page');
-      const totalPages = pages.length;
-      let currentPage = 0; // 0 corresponde a la página de introducción (page1)
-
-      function updateBookPosition() {
-        book.style.transform = `translateX(-${currentPage * 100}vw)`;
-        pages[currentPage].classList.add('show');
+        margin-top: 10px;
       }
 
-      function changePage(delta) {
-        pages[currentPage].classList.remove('show');
-        currentPage += delta;
-        if (currentPage < 0) currentPage = 0;
-        if (currentPage >= totalPages) currentPage = totalPages - 1;
-        updateBookPosition();
+      /* Botón para reproducir música en la cubierta */
+      .music-btn {
+        margin-top: 20px;
+        padding: 10px 15px;
+        background: #FFB6C1;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
       }
 
-      let touchStartX = 0;
-      book.addEventListener('touchstart', e => {
-        touchStartX = e.touches[0].clientX;
-      });
-      book.addEventListener('touchend', e => {
-        const touchEndX = e.changedTouches[0].clientX;
-        const deltaX = touchStartX - touchEndX;
-        if (Math.abs(deltaX) > 50) {
-          deltaX > 0 ? changePage(1) : changePage(-1);
+      .music-btn:hover {
+        background: #FF69B4;
+      }
+
+      /* Contenedor principal del libro */
+      #bookContainer {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        perspective: 1500px;
+        background: #fffaf0;
+        overflow-x: hidden;
+      }
+
+      /* Contenedor de páginas */
+      #book {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        transition: transform 0.8s ease;
+        transform-style: preserve-3d;
+      }
+
+      /* Cada página ocupa 100% del viewport */
+      .page {
+        flex: 0 0 100%;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 5vh 5vw;
+        overflow-y: auto;
+        background: white;
+        position: relative;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      /* Detalle decorativo en cada página */
+      .page::after {
+        content: '💖';
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-size: 30px;
+        opacity: 0.4;
+      }
+
+      /* Animación de entrada de página */
+      .page.show {
+        animation: fadeIn 0.8s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-      });
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-      document.addEventListener('mousemove', e => {
-        if (e.clientX < 50) changePage(-1);
-        else if (e.clientX > window.innerWidth - 50) changePage(1);
-      });
+      /* Página 1: Introducción (mensaje de cumpleaños) */
+      .intro-page {
+        text-align: justify;
+        line-height: 1.6;
+      }
 
-      document.getElementById('btnFirmar').addEventListener('click', () => {
-        document.getElementById('mensajeFinal').style.opacity = 1;
-      });
+      .intro-page p {
+        margin: 1em 0;
+      }
 
-      updateBookPosition();
-    });
-  </script>
-</body>
+      /* Aumenta el interlineado para los capítulos:
+         Noche 1, Noche 2, Noche 3, Noche 4 y Epílogo */
+      #page2 p,
+      #page3 p,
+      #page4 p,
+      #page5 p,
+      #page6 p {
+        line-height: 2;
+      }
+
+      /* Estilo para títulos de capítulos */
+      h2 {
+        margin-top: 0;
+        color: #c1440e;
+      }
+
+      /* Botón de firma */
+      .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 25px;
+        font-size: 20px;
+        background: #FFB6C1;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .btn:hover {
+        background: #FF69B4;
+      }
+
+      .signatureContainer {
+        margin-top: 40px;
+        text-align: center;
+      }
+
+      .signatureContainer .mensajeFinal {
+        font-size: 24px;
+        font-weight: bold;
+        color: #c1440e;
+        opacity: 0;
+        transition: opacity 2s;
+      }
+
+      /* Indicador de navegación */
+      .navHint {
+        position: absolute;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+      }
+
+      /* Oculta el segundo reproductor */
+      audio[controls] {
+        display: none;
+      }
+
+      /* Responsivo */
+      @media only screen and (max-width: 600px) {
+        #coverOverlay .cover h1 {
+          font-size: 36px;
+        }
+
+        #coverOverlay .cover p {
+          font-size: 16px;
+        }
+
+        .music-btn {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+
+        h2 {
+          font-size: 22px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+
+        .btn {
+          font-size: 18px;
+          padding: 8px 20px;
+        }
+
+        .signatureContainer .mensajeFinal {
+          font-size: 20px;
+        }
+
+        .navHint {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cubierta Overlay -->
+    <div id="coverOverlay">
+      <div class="cover">
+        <h1>ALMAS GEMELAS</h1>
+        <p>Un cuento de amor</p>
+        <!-- Botón para iniciar la reproducción y abrir la cubierta -->
+        <button class="music-btn" id="btnMusic">Dale Play mi amor</button>
+      </div>
+    </div>
+
+    <!-- Contenedor principal del libro -->
+    <div id="bookContainer">
+      <div id="book">
+        <!-- Página 1: Introducción (mensaje de cumpleaños) -->
+        <div class="page intro-page" id="page1">
+          <p>
+            Hoy el universo se detiene para celebrar que llegaste a iluminar este mundo hace 19 primaveras. ¿Dónde quedó aquella chispa tímida que conocí hace 4 lunas? En su lugar floreció esta mujer extraordinaria que hace latir mi corazón al compás de sus risas.
+          </p>
+          <p>
+            Que nuestro Padre Celestial te cubra con su manto de bendiciones, porque eres pura luz hecha mujer: esa combinación perfecta de ternura guerrera, inteligencia que deslumbra y una belleza que nace del alma.
+          </p>
+          <p>
+            Te preparé un pequeño tesoro digital donde plasmé nuestros primeros capítulos (¡saqué al poeta cursi que llevo dentro! 📖💘). Si logro hacer sonreír a mi musa inspiradora, firma tu nombre en la última página y quedaremos unidos como tinta y papel. Si no... ¡prometo tomar clases de escritura romántica! XD
+          </p>
+          <p>
+            Feliz cumpleaños, mi razón para creer en los milagros.<br />
+            <strong>Eternamente tu cómplice de sueños, tu chico Alonso 🌙💫</strong>
+          </p>
+          <div class="navHint">Desliza a la izquierda para continuar</div>
+        </div>
+
+        <!-- Página 2: Noche 1 -->
+        <div class="page" id="page2">
+          <h2>Noche 1: El Encuentro en el Jardín de Estrellas</h2>
+          <p>
+            En un rincón olvidado por el tiempo, donde las luces del firmamento se entrelazan con el murmullo del viento, se reunían almas jóvenes en un jardín encantado. Allí, entre risas tímidas y saludos que parecían danzas silenciosas, dos espíritus se distinguían a la distancia. Ella, de mirada soñadora, había notado su reflejo en los ojos de aquel “segundo alma” con quien apenas compartían saludos cordiales. Sin saber lo que el destino tenía preparado, aquella noche se selló un pacto silencioso: ella le pidió que la acompañara hasta su morada, y él, con la cortesía de un caballero de antaño, aceptó. Durante el trayecto, entre anécdotas y confidencias que brotaban como riachuelos, descubrieron una conexión sutil que prometía crecer con cada palabra compartida. Al llegar a su destino, un beso en la mejilla marcó el inicio de una leyenda que apenas comenzaba a escribirse.
+          </p>
+          <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
+        </div>
+
+        <!-- Página 3: Noche 2 -->
+        <div class="page" id="page3">
+          <h2>Noche 2: Melodías en la Ciudad de los Susurros</h2>
+          <p>
+            La segunda noche se presentó en un escenario transformado por la imaginación, alejado del bullicio habitual, en una ciudad donde cada calle parecía susurrar secretos de amores pasados y futuros. Viajaron en un auto que se convirtió en un carruaje moderno, donde las calles se iluminaban como si celebraran su inminente aventura. En medio del viaje, la magia se hizo palpable cuando sus manos se encontraron de forma casi imperceptible, encendiendo una chispa que llenó el aire de promesas silenciosas. Llegaron a un lugar donde la noche se transformó en un carnaval de risas, karaoke y juegos, donde cada canción era un eco de sus corazones latiendo al unísono. Cuando el reloj marcó la hora de despedirse, la calidez de aquella noche se llevó consigo un suspiro y el deseo de volver a encontrarse.
+          </p>
+          <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
+        </div>
+
+        <!-- Página 4: Noche 3 -->
+        <div class="page" id="page4">
+          <h2>Noche 3: Bajo el Manto del Firmamento</h2>
+          <p>
+            La tercera noche llegó con la vibrante energía de un día lleno de desafíos y victorias. Él se preparaba para un partido de fútbol en un escenario casi mítico, donde el campo parecía estar bendecido por la divinidad de las estrellas. Ella, con el espíritu de una fiel compañera, decidió acompañarlo, convirtiéndose en el amuleto de buena suerte que él necesitaba. Tras la intensa jornada, mientras las luces se mezclaban con el cansancio, ella notó el peso del agotamiento en su espalda. Con la ternura de quien comprende el lenguaje del alma, se ofreció a aliviar su fatiga con masajes que parecían pinceladas de calma en medio del caos. Sentados en un parque iluminado solo por el brillo de las estrellas, se entregaron a un silencio cómplice, donde las palabras sobraban y el universo parecía detenerse. Entre un susurro y una nota musical, él cantó, y en esa dulce melodía, ella encontró el reflejo de sus propios sueños.
+          </p>
+          <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
+        </div>
+
+        <!-- Página 5: Noche 4 -->
+        <div class="page" id="page5">
+          <h2>Noche 4: El Beso del Destino en la Ciudad de los Secretos</h2>
+          <p>
+            En una noche siguiente, el destino quiso poner a prueba su conexión en medio de un vibrante encuentro deportivo, donde se enfrentaban naciones y pasiones. La efervescencia se vio empañada momentáneamente cuando él, en un descuido, saludó a un alma fría y llena de maldad, haciendo brotar celos en ella. El ambiente se volvió tenso; el silencio se adueñó de los minutos, y la magia se detuvo en un instante. Sin embargo, el verdadero valor de su vínculo se manifestó cuando, en plena calle, él la abrazó con la fuerza de quien busca sanar una herida invisible y le preguntó qué le pasaba. La respuesta fue un beso, tierno y ardiente, que rompió las barreras de la incomodidad y selló la reconciliación entre sus corazones.
+          </p>
+          <div class="navHint">Desliza a la izquierda o derecha para navegar</div>
+        </div>
+
+        <!-- Página 6: Epílogo -->
+        <div class="page" id="page6">
+          <h2>Epílogo: El Crepúsculo de un Amor Eterno</h2>
+          <p>
+            A lo largo de muchas noches llenas de encuentros, risas, confesiones y desafíos, dos almas tejieron un lazo indestructible. Su amor creció en la complicidad de cada instante, en la magia de cada sonrisa y en la dulzura de cada beso furtivo. La leyenda de aquellos encuentros se convirtió en un susurro eterno, un recordatorio de que cuando dos almas están destinadas a encontrarse, el universo conspira para unirlas. Así, en el crisol de la noche, donde la luz y la sombra se funden en un abrazo, quedó sellado el destino de un amor que desafió al tiempo y a la rutina.
+          </p>
+          <div class="navHint">Desliza a la izquierda para continuar</div>
+        </div>
+
+        <!-- Página 7: Firma final -->
+        <div class="page" id="page7">
+          <h2>Firma</h2>
+          <p>
+            Si te gustó este tesoro digital, firma y quedaremos unidos como tinta y papel.
+          </p>
+          <button class="btn" id="btnFirmar">Firmar</button>
+          <div class="signatureContainer">
+            <p class="mensajeFinal" id="mensajeFinal">
+              Juntos por siempre Malu y Alonso ❤️
+            </p>
+          </div>
+          <div class="navHint">Desliza a la derecha para volver</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio de fondo (CANCION2.mp3) con playsinline -->
+    <audio id="bgMusic" src="CANCION2.mp3" loop playsinline></audio>
+    <!-- Segundo audio con controles (oculto) -->
+    <audio controls>
+      <source src="CANCION.mp3" type="audio/mpeg" />
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Reproducción y apertura de la cubierta:
+        const bgMusic = document.getElementById("bgMusic");
+        const btnMusic = document.getElementById("btnMusic");
+        const coverOverlay = document.getElementById("coverOverlay");
+
+        btnMusic.addEventListener("click", () => {
+          bgMusic
+            .play()
+            .then(() => {
+              console.log("Música reproduciéndose...");
+              coverOverlay.classList.add("open");
+              setTimeout(() => {
+                coverOverlay.style.display = "none";
+                updateBookPosition();
+              }, 1000);
+            })
+            .catch((error) => {
+              console.error("Error al reproducir la música:", error);
+            });
+        });
+
+        // Control de páginas:
+        const book = document.getElementById("book");
+        const pages = document.querySelectorAll(".page");
+        const totalPages = pages.length;
+        let currentPage = 0; // 0 corresponde a la página de introducción (page1)
+
+        function updateBookPosition() {
+          book.style.transform = `translateX(-${currentPage * 100}vw)`;
+          pages[currentPage].classList.add("show");
+        }
+
+        function changePage(delta) {
+          pages[currentPage].classList.remove("show");
+          currentPage += delta;
+          if (currentPage < 0) currentPage = 0;
+          if (currentPage >= totalPages) currentPage = totalPages - 1;
+          updateBookPosition();
+        }
+
+        let touchStartX = 0;
+        book.addEventListener("touchstart", (e) => {
+          touchStartX = e.touches[0].clientX;
+        });
+
+        book.addEventListener("touchend", (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const deltaX = touchStartX - touchEndX;
+          if (Math.abs(deltaX) > 50) {
+            deltaX > 0 ? changePage(1) : changePage(-1);
+          }
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (e.clientX < 50) changePage(-1);
+          else if (e.clientX > window.innerWidth - 50) changePage(1);
+        });
+
+        document.getElementById("btnFirmar").addEventListener("click", () => {
+          document.getElementById("mensajeFinal").style.opacity = 1;
+        });
+
+        updateBookPosition();
+      });
+    </script>
+  </body>
 </html>
